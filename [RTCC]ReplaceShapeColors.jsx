@@ -40,7 +40,7 @@ function getColors(layerNode) {
             app.activeDocument.activeLayer = layer;
 
              if (layer.kind == LayerKind.SOLIDFILL) {
-                    alert(getAdjustmentLayerColor(app.activeDocument, layer));
+                    // alert(getAdjustmentLayerColor(app.activeDocument, layer));
                  if(searchColor == getAdjustmentLayerColor(app.activeDocument, layer)){
                       putFillColor(_r, _g, _b);
                  }
@@ -49,8 +49,6 @@ function getColors(layerNode) {
         }
     }
 }
-
-getColors(app.activeDocument.layerSets);
 
 //Replacer
 
@@ -69,6 +67,7 @@ function putFillColor(_r, _g, _b) {
     executeAction(charIDToTypeID('setd'), desc1, DialogModes.NO);  
 }
 
+//Hex to RGB convert
 function hexToRgb(hex) {
     // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
     var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
@@ -83,3 +82,5 @@ function hexToRgb(hex) {
         b: parseInt(result[3], 16)
     } : null;
 }
+
+getColors(app.activeDocument.layerSets);
