@@ -10,8 +10,8 @@
 var searchColor = prompt("Color to search","FF00AA");
 var replaceColor = prompt("Color to replace","C00FFE");
 
-var _r = hexToRgb(replaceColor).r;
-    _g = hexToRgb(replaceColor).g;
+var _r = hexToRgb(replaceColor).r,
+    _g = hexToRgb(replaceColor).g,
     _b = hexToRgb(replaceColor).b;
 
 //Function to extract color from Layer
@@ -44,7 +44,6 @@ function getColors(layerNode) {
                  if(searchColor == getAdjustmentLayerColor(app.activeDocument, layer)){
                       putFillColor(_r, _g, _b);
                  }
-               
              }
         }
     }
