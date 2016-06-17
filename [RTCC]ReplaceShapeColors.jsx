@@ -17,6 +17,11 @@ var replaceColorstroke = prompt("Stroke Color to replace","8cc63f");
 var _r = hexToRgb(replaceColor).r;
     _g = hexToRgb(replaceColor).g;
     _b = hexToRgb(replaceColor).b;
+
+var _sr = hexToRgb(replaceColorstroke).r;
+    _sg = hexToRgb(replaceColorstroke).g;
+    _sb = hexToRgb(replaceColorstroke).b;
+
 //ENDFILLCOLOR
 
 //STROKE
@@ -65,9 +70,9 @@ function getColors(layerNode) {
              if (layer.kind == LayerKind.SOLIDFILL) {
                     // alert(getAdjustmentLayerColor(app.activeDocument, layer));
                  if(searchColor == getAdjustmentLayerColor(app.activeDocument, layer)){
-
                        if(searchColorstroke == getAdjustmentLayerColorStroke(app.activeDocument, layer)){
                             putFillColor(_r, _g, _b);
+                            putFillColorStroke(_sr, _sg, _sb);
                         }                                        
                  }
                
@@ -91,6 +96,21 @@ function putFillColor(_r, _g, _b) {
     desc2.putObject(charIDToTypeID('Clr '), stringIDToTypeID("RGBColor"), desc3);  
     desc1.putObject(charIDToTypeID('T   '), stringIDToTypeID("solidColorLayer"), desc2);  
     executeAction(charIDToTypeID('setd'), desc1, DialogModes.NO);  
+}
+
+function putFillColorStroke(_sr, _sg, _sb) {  
+    var desc4 = new ActionDescriptor(),  
+        desc5 = new ActionDescriptor(),  
+        desc6 = new ActionDescriptor(),  
+        ref2 = new ActionReference();  
+    ref2.putEnumerated(stringIDToTypeID("strokeStyleContent"), charIDToTypeID('Ordn'), charIDToTypeID('Trgt'));  
+    desc4.putReference(charIDToTypeID('null'), ref2);  
+    desc6.putDouble(charIDToTypeID('Rd  '), _sr);  
+    desc6.putDouble(charIDToTypeID('Grn '), _sg);  
+    desc6.putDouble(charIDToTypeID('Bl  '), _sb);  
+    desc5.putObject(charIDToTypeID('Clr '), stringIDToTypeID("RGBColor"), desc6);  
+    desc4.putObject(charIDToTypeID('T   '), stringIDToTypeID("solidColorLayer"), desc5);  
+    executeAction(charIDToTypeID('setd'), desc4, DialogModes.NO);  
 }
 
 //Hex to RGB convert
