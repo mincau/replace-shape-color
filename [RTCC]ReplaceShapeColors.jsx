@@ -7,12 +7,35 @@
 //Select what i searched
 //Replace what is selected by what is 
 
+//FILLCOLOR
 var searchColor = prompt("Color to search","FF00AA");
-var replaceColor = prompt("Color to replace","C00FFE");
+var searchColorstroke = prompt("Stroke Color to search","414142");
 
-var _r = hexToRgb(replaceColor).r,
-    _g = hexToRgb(replaceColor).g,
+var replaceColor = prompt("Color to replace","C00FFE");
+var replaceColorstroke = prompt("Stroke Color to replace","8cc63f");
+
+var _r = hexToRgb(replaceColor).r;
+    _g = hexToRgb(replaceColor).g;
     _b = hexToRgb(replaceColor).b;
+//ENDFILLCOLOR
+
+//STROKE
+function getAdjustmentLayerColorStroke(doc, layer){
+    var ref = new ActionReference();  
+    ref.putEnumerated( stringIDToTypeID("contentLayer"), charIDToTypeID("Ordn"), charIDToTypeID("Trgt") );  
+    var layerDesc = executeActionGet(ref);  
+    var strokeSt = layerDesc.getObjectValue(stringIDToTypeID("AGMStrokeStyleInfo"));  
+    var strokeStyleColor = strokeSt.getObjectValue(stringIDToTypeID("strokeStyleContent")).getObjectValue(stringIDToTypeID("color"));  
+
+    var stroker = Math.round(strokeStyleColor.getDouble(stringIDToTypeID("red")));
+    var strokeg = Math.round(strokeStyleColor.getDouble(stringIDToTypeID("green")));
+    var strokeb = Math.round(strokeStyleColor.getDouble(stringIDToTypeID("blue")));
+
+    var createdSolidColorStroke = Stdlib.createRGBColor(stroker, strokeg, strokeb);
+    var createdRGBColorStroke = createdSolidColorStroke.rgb;
+    return createdRGBColorStroke.hexValue;
+};
+//ENDSTROKE
 
 //Function to extract color from Layer
 function getAdjustmentLayerColor(doc, layer) { 
@@ -42,8 +65,12 @@ function getColors(layerNode) {
              if (layer.kind == LayerKind.SOLIDFILL) {
                     // alert(getAdjustmentLayerColor(app.activeDocument, layer));
                  if(searchColor == getAdjustmentLayerColor(app.activeDocument, layer)){
-                      putFillColor(_r, _g, _b);
+
+                       if(searchColorstroke == getAdjustmentLayerColorStroke(app.activeDocument, layer)){
+                            putFillColor(_r, _g, _b);
+                        }                                        
                  }
+               
              }
         }
     }
