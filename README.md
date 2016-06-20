@@ -1,2 +1,2 @@
-# replace-shape-color
-Replace Shape Color Photoshop CC 2015
+# replace-shape-color-stroke-color
+Replace Shape Color and Stroke Color in Photoshop CC 2015
