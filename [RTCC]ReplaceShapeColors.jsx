@@ -12,7 +12,7 @@ var searchColor = prompt("Color to search","FF00AA");
 var searchColorstroke = prompt("Stroke Color to search","414142");
 
 var replaceColor = prompt("Color to replace","C00FFE");
-var replaceColorstroke = prompt("Stroke Color to replace","8cc63f");
+var replaceColorstroke = prompt("Stroke Color to replace","8CC63F");
 
 var _r = hexToRgb(replaceColor).r;
     _g = hexToRgb(replaceColor).g;
@@ -96,22 +96,78 @@ function putFillColor(_r, _g, _b) {
     desc2.putObject(charIDToTypeID('Clr '), stringIDToTypeID("RGBColor"), desc3);  
     desc1.putObject(charIDToTypeID('T   '), stringIDToTypeID("solidColorLayer"), desc2);  
     executeAction(charIDToTypeID('setd'), desc1, DialogModes.NO);  
+
 }
 
-function putFillColorStroke(_sr, _sg, _sb) {  
-    var desc4 = new ActionDescriptor(),  
-        desc5 = new ActionDescriptor(),  
-        desc6 = new ActionDescriptor(),  
-        ref2 = new ActionReference();  
-    ref2.putEnumerated(stringIDToTypeID("strokeStyleContent"), charIDToTypeID('Ordn'), charIDToTypeID('Trgt'));  
-    desc4.putReference(charIDToTypeID('null'), ref2);  
-    desc6.putDouble(charIDToTypeID('Rd  '), _sr);  
-    desc6.putDouble(charIDToTypeID('Grn '), _sg);  
-    desc6.putDouble(charIDToTypeID('Bl  '), _sb);  
-    desc5.putObject(charIDToTypeID('Clr '), stringIDToTypeID("RGBColor"), desc6);  
-    desc4.putObject(charIDToTypeID('T   '), stringIDToTypeID("solidColorLayer"), desc5);  
-    executeAction(charIDToTypeID('setd'), desc4, DialogModes.NO);  
+function putFillColorStroke(_sr,_sg,_sb){
+    var idsetd = charIDToTypeID( "setd" );
+    var desc1694 = new ActionDescriptor();
+    var idnull = charIDToTypeID( "null" );
+        var ref265 = new ActionReference();
+        var idcontentLayer = stringIDToTypeID( "contentLayer" );
+        var idOrdn = charIDToTypeID( "Ordn" );
+        var idTrgt = charIDToTypeID( "Trgt" );
+        ref265.putEnumerated( idcontentLayer, idOrdn, idTrgt );
+    desc1694.putReference( idnull, ref265 );
+    var idT = charIDToTypeID( "T   " );
+        var desc1695 = new ActionDescriptor();
+        var idstrokeStyle = stringIDToTypeID( "strokeStyle" );
+            var desc1696 = new ActionDescriptor();
+            var idstrokeStyleContent = stringIDToTypeID( "strokeStyleContent" );
+                var desc1697 = new ActionDescriptor();
+                var idClr = charIDToTypeID( "Clr " );
+                    var desc1698 = new ActionDescriptor();
+                    var idRd = charIDToTypeID( "Rd  " );
+                    desc1698.putDouble( idRd, _sr );
+                    var idGrn = charIDToTypeID( "Grn " );
+                    desc1698.putDouble( idGrn, _sg );
+                    var idBl = charIDToTypeID( "Bl  " );
+                    desc1698.putDouble( idBl, _sb );
+                var idRGBC = charIDToTypeID( "RGBC" );
+                desc1697.putObject( idClr, idRGBC, desc1698 );
+            var idsolidColorLayer = stringIDToTypeID( "solidColorLayer" );
+            desc1696.putObject( idstrokeStyleContent, idsolidColorLayer, desc1697 );
+            var idstrokeStyleVersion = stringIDToTypeID( "strokeStyleVersion" );
+            desc1696.putInteger( idstrokeStyleVersion, 2 );
+            var idstrokeEnabled = stringIDToTypeID( "strokeEnabled" );
+            desc1696.putBoolean( idstrokeEnabled, true );
+        var idstrokeStyle = stringIDToTypeID( "strokeStyle" );
+        desc1695.putObject( idstrokeStyle, idstrokeStyle, desc1696 );
+    var idshapeStyle = stringIDToTypeID( "shapeStyle" );
+    desc1694.putObject( idT, idshapeStyle, desc1695 );
+executeAction( idsetd, desc1694, DialogModes.NO );
 }
+
+// EXTRA FUNCTION ROUND CORNERS
+// function putRoundCorners(_corner) {  
+// var idchangePathDetails = stringIDToTypeID( "changePathDetails" );  
+//     var desc26 = new ActionDescriptor();  
+//     var idkeyOriginType = stringIDToTypeID( "keyOriginType" );  
+//     desc26.putInteger( idkeyOriginType, 1 );  
+//     var idkeyOriginRRectRadii = stringIDToTypeID( "keyOriginRRectRadii" );  
+//         var desc27 = new ActionDescriptor();  
+//         var idunitValueQuadVersion = stringIDToTypeID( "unitValueQuadVersion" );  
+//         desc27.putInteger( idunitValueQuadVersion, 1 );  
+//         var idtopRight = stringIDToTypeID( "topRight" );  
+//         var idPxl = charIDToTypeID( "#Pxl" );  
+//         desc27.putUnitDouble( idtopRight, idPxl, _corner );  
+//         var idtopLeft = stringIDToTypeID( "topLeft" );  
+//         var idPxl = charIDToTypeID( "#Pxl" );  
+//         desc27.putUnitDouble( idtopLeft, idPxl, _corner );  
+//         var idbottomLeft = stringIDToTypeID( "bottomLeft" );  
+//         var idPxl = charIDToTypeID( "#Pxl" );  
+//         desc27.putUnitDouble( idbottomLeft, idPxl, _corner );  
+//         var idbottomRight = stringIDToTypeID( "bottomRight" );  
+//         var idPxl = charIDToTypeID( "#Pxl" );  
+//         desc27.putUnitDouble( idbottomRight, idPxl, _corner );  
+//     var idradii = stringIDToTypeID( "radii" );  
+//     desc26.putObject( idkeyOriginRRectRadii, idradii, desc27 );  
+//     var idkeyActionRadiiSource = stringIDToTypeID( "keyActionRadiiSource" );  
+//     desc26.putInteger( idkeyActionRadiiSource, 1 );  
+//     var idkeyActionChangeAllCorners = stringIDToTypeID( "keyActionChangeAllCorners" );  
+//     desc26.putBoolean( idkeyActionChangeAllCorners, true );  
+// executeAction( idchangePathDetails, desc26, DialogModes.NO );
+// }
 
 //Hex to RGB convert
 function hexToRgb(hex) {
