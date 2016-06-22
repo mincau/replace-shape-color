@@ -1,13 +1,7 @@
 //@include "/Applications/Adobe Photoshop CC 2015/Presets/Scripts/xlib/stdlib.js"
 //original is exportshapecolors
 
-//Basic Instructions
-//Input what to search for
-//Input what to replace for
-//Select what i searched
-//Replace what is selected by what is 
-
-//FILLCOLOR
+//COLOR VARS
 var searchColor = prompt("Color to search","FF00AA");
 var searchColorstroke = prompt("Stroke Color to search","414142");
 
@@ -16,6 +10,7 @@ var replaceColorstroke = prompt("Stroke Color to replace","8CC63F");
 
 var strokeyesorno = prompt("0 to no strok 1 to stroke","0");
 
+//hextoRGB
 var _r = hexToRgb(replaceColor).r;
     _g = hexToRgb(replaceColor).g;
     _b = hexToRgb(replaceColor).b;
@@ -23,8 +18,7 @@ var _r = hexToRgb(replaceColor).r;
 var _sr = hexToRgb(replaceColorstroke).r;
     _sg = hexToRgb(replaceColorstroke).g;
     _sb = hexToRgb(replaceColorstroke).b;
-
-//ENDFILLCOLOR
+//END COLOR VARS
 
 //STROKE
 function getAdjustmentLayerColorStroke(doc, layer){
@@ -61,7 +55,7 @@ function getAdjustmentLayerColor(doc, layer) {
     return createdRGBColor.hexValue;
 };
 
-//Function to cycle through layers and output to external file
+//Function to cycle through layers apply changes if requests are met.
 function getColors(layerNode) {    
     for (var i=0; i<layerNode.length; i++) {
         getColors(layerNode[i].layerSets);
@@ -71,7 +65,6 @@ function getColors(layerNode) {
 
             if (layer.kind == LayerKind.SOLIDFILL && searchColor == getAdjustmentLayerColor(app.activeDocument, layer) && strokeyesorno == 0) {
                 putFillColor(_r, _g, _b);
-
              }
 
             if (layer.kind == LayerKind.SOLIDFILL && searchColor == getAdjustmentLayerColor(app.activeDocument, layer) && searchColorstroke == getAdjustmentLayerColorStroke(app.activeDocument, layer) && strokeyesorno == 1) {
@@ -82,7 +75,7 @@ function getColors(layerNode) {
     }
 }
 
-//Replacer
+//Apply Fill Color
 
 function putFillColor(_r, _g, _b) {  
     var desc1 = new ActionDescriptor(),  
@@ -99,6 +92,8 @@ function putFillColor(_r, _g, _b) {
     executeAction(charIDToTypeID('setd'), desc1, DialogModes.NO);  
 
 }
+
+//Apply Stroke Color
 
 function putFillColorStroke(_sr,_sg,_sb){
     var idsetd = charIDToTypeID( "setd" );
@@ -139,37 +134,6 @@ function putFillColorStroke(_sr,_sg,_sb){
 executeAction( idsetd, desc1694, DialogModes.NO );
 }
 
-// EXTRA FUNCTION ROUND CORNERS
-// function putRoundCorners(_corner) {  
-// var idchangePathDetails = stringIDToTypeID( "changePathDetails" );  
-//     var desc26 = new ActionDescriptor();  
-//     var idkeyOriginType = stringIDToTypeID( "keyOriginType" );  
-//     desc26.putInteger( idkeyOriginType, 1 );  
-//     var idkeyOriginRRectRadii = stringIDToTypeID( "keyOriginRRectRadii" );  
-//         var desc27 = new ActionDescriptor();  
-//         var idunitValueQuadVersion = stringIDToTypeID( "unitValueQuadVersion" );  
-//         desc27.putInteger( idunitValueQuadVersion, 1 );  
-//         var idtopRight = stringIDToTypeID( "topRight" );  
-//         var idPxl = charIDToTypeID( "#Pxl" );  
-//         desc27.putUnitDouble( idtopRight, idPxl, _corner );  
-//         var idtopLeft = stringIDToTypeID( "topLeft" );  
-//         var idPxl = charIDToTypeID( "#Pxl" );  
-//         desc27.putUnitDouble( idtopLeft, idPxl, _corner );  
-//         var idbottomLeft = stringIDToTypeID( "bottomLeft" );  
-//         var idPxl = charIDToTypeID( "#Pxl" );  
-//         desc27.putUnitDouble( idbottomLeft, idPxl, _corner );  
-//         var idbottomRight = stringIDToTypeID( "bottomRight" );  
-//         var idPxl = charIDToTypeID( "#Pxl" );  
-//         desc27.putUnitDouble( idbottomRight, idPxl, _corner );  
-//     var idradii = stringIDToTypeID( "radii" );  
-//     desc26.putObject( idkeyOriginRRectRadii, idradii, desc27 );  
-//     var idkeyActionRadiiSource = stringIDToTypeID( "keyActionRadiiSource" );  
-//     desc26.putInteger( idkeyActionRadiiSource, 1 );  
-//     var idkeyActionChangeAllCorners = stringIDToTypeID( "keyActionChangeAllCorners" );  
-//     desc26.putBoolean( idkeyActionChangeAllCorners, true );  
-// executeAction( idchangePathDetails, desc26, DialogModes.NO );
-// }
-
 //Hex to RGB convert
 function hexToRgb(hex) {
     // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
@@ -185,5 +149,3 @@ function hexToRgb(hex) {
         b: parseInt(result[3], 16)
     } : null;
 }
-
-// getColors(app.activeDocument.layerSets);
