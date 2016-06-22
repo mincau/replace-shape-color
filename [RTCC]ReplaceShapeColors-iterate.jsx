@@ -14,6 +14,8 @@ var searchColorstroke = prompt("Stroke Color to search","414142");
 var replaceColor = prompt("Color to replace","C00FFE");
 var replaceColorstroke = prompt("Stroke Color to replace","8CC63F");
 
+var strokeyesorno = prompt("0 to no strok 1 to stroke","0");
+
 var _r = hexToRgb(replaceColor).r;
     _g = hexToRgb(replaceColor).g;
     _b = hexToRgb(replaceColor).b;
@@ -67,15 +69,14 @@ function getColors(layerNode) {
             var layer=layerNode[i].artLayers[layerIndex];
             app.activeDocument.activeLayer = layer;
 
-             if (layer.kind == LayerKind.SOLIDFILL) {
-                    // alert(getAdjustmentLayerColor(app.activeDocument, layer));
-                 if(searchColor == getAdjustmentLayerColor(app.activeDocument, layer)){
-                       if(searchColorstroke == getAdjustmentLayerColorStroke(app.activeDocument, layer)){
-                            putFillColor(_r, _g, _b);
-                            putFillColorStroke(_sr, _sg, _sb);
-                        }                                        
-                 }
-               
+            if (layer.kind == LayerKind.SOLIDFILL && searchColor == getAdjustmentLayerColor(app.activeDocument, layer) && strokeyesorno == 0) {
+                putFillColor(_r, _g, _b);
+
+             }
+
+            if (layer.kind == LayerKind.SOLIDFILL && searchColor == getAdjustmentLayerColor(app.activeDocument, layer) && searchColorstroke == getAdjustmentLayerColorStroke(app.activeDocument, layer) && strokeyesorno == 1) {
+                putFillColor(_r, _g, _b);
+                putFillColorStroke(_sr, _sg, _sb);           
              }
         }
     }
