@@ -26,9 +26,13 @@ function getAdjustmentLayerColorStroke(doc, layer){
     var ref = new ActionReference();  
     ref.putEnumerated( stringIDToTypeID("contentLayer"), charIDToTypeID("Ordn"), charIDToTypeID("Trgt") );  
     var layerDesc = executeActionGet(ref);  
-    var strokeSt = layerDesc.getObjectValue(stringIDToTypeID("AGMStrokeStyleInfo"));  
-    var strokeStyleColor = strokeSt.getObjectValue(stringIDToTypeID("strokeStyleContent")).getObjectValue(stringIDToTypeID("color"));  
+    var strokeSt = layerDesc.getObjectValue(stringIDToTypeID("AGMStrokeStyleInfo")); 
 
+    // var idstrokeEnabled = stringIDToTypeID( "strokeEnabled" );
+    var agmDesc = strokeSt.getBoolean(stringIDToTypeID( "strokeEnabled" )); 
+    alert(agmDesc);
+
+    var strokeStyleColor = strokeSt.getObjectValue(stringIDToTypeID("strokeStyleContent")).getObjectValue(stringIDToTypeID("color"));  
     var stroker = Math.round(strokeStyleColor.getDouble(stringIDToTypeID("red")));
     var strokeg = Math.round(strokeStyleColor.getDouble(stringIDToTypeID("green")));
     var strokeb = Math.round(strokeStyleColor.getDouble(stringIDToTypeID("blue")));
@@ -96,10 +100,10 @@ function getColors(layerSet) {
         }
 
         if (strokeyesorno == 1) {
-            currentColor = getAdjustmentLayerColorStroke(app.activeDocument, current);
+            currentStroke = getAdjustmentLayerColorStroke(app.activeDocument, current);
             if (searchColor == currentColor && searchColorstroke == currentStroke){
                 putFillColor(_r, _g, _b);
-                putFillColorStroke(_sr, _sg, _sb); 
+                putFillColorStroke(_sr, _sg, _sb);
             } 
         }
     }
