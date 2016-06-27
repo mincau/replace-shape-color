@@ -159,4 +159,4 @@ function hexToRgb(hex) {
 }
 
 
-getColors(app.activeDocument.layerSets);
+//getColors(app.activeDocument.layerSets);
