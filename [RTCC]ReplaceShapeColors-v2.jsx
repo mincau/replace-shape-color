@@ -1,8 +1,9 @@
 //@include "/Applications/Adobe Photoshop CC 2015/Presets/Scripts/xlib/stdlib.js"
 //original is exportshapecolors
+// © David Luna fuckin' boss.
 
 //COLOR VARS
-var searchColor = prompt("Color to search","FF00AA");
+var searchColor = prompt("Color to search","777575");
 var searchColorstroke = prompt("Stroke Color to search","414142");
 
 var replaceColor = prompt("Color to replace","C00FFE");
@@ -56,33 +57,56 @@ function getAdjustmentLayerColor(doc, layer) {
 };
 
 //Function to cycle through layers apply changes if requests are met.
-//This can be way faster if the strokeyesno its the main fork before the rest.___________!!!!
-function getColors(layerNode) {    
-    for (var i=0; i<layerNode.length; i++) {
-        getColors(layerNode[i].layerSets);
-        for(var layerIndex=0; layerIndex < layerNode[i].artLayers.length; layerIndex++) {
-            var layer=layerNode[i].artLayers[layerIndex];
-            app.activeDocument.activeLayer = layer;
 
-            if (layer.kind == LayerKind.SOLIDFILL) {
-                if (strokeyesorno == 0) {
-                    if (searchColor == getAdjustmentLayerColor(app.activeDocument, layer)){
-                    putFillColor(_r, _g, _b);
-                    }
-                }
+function getSolidLayers(layerSet) {
+    var l = layerSet.length,
+        layers = [],
+        currentLayer;
 
-                if (strokeyesorno == 1) {
-                    if (searchColor == getAdjustmentLayerColor(app.activeDocument, layer) && searchColorstroke == getAdjustmentLayerColorStroke(app.activeDocument, layer)){
-                    putFillColor(_r, _g, _b);
-                    putFillColorStroke(_sr, _sg, _sb); 
-                    } 
-                }
+    while(l--) {
+        currentLayer = layerSet[l];
 
-            }
-            
+        if ( currentLayer.kind == LayerKind.SOLIDFILL ) {
+            layers.push(currentLayer);
+        }
+        if ( currentLayer.artLayers && currentLayer.artLayers.length ){
+            layers = layers.concat(getSolidLayers(currentLayer.artLayers));
+        }
+        if ( currentLayer.layerSets && currentLayer.layerSets.length ){
+            layers = layers.concat(getSolidLayers(currentLayer.layerSets));
         }
     }
+
+    return layers;
 }
+
+function getColors(layerSet) {
+    var layers = getSolidLayers(layerSet),
+        i = layers.length,
+        current, currentColor, currentStroke;
+
+    while ( i-- ) {
+        current = layers[i];
+        currentColor = getAdjustmentLayerColor(app.activeDocument, current);
+        app.activeDocument.activeLayer = current;
+        if (strokeyesorno == 0) {
+            if (searchColor == currentColor){
+                putFillColor(_r, _g, _b);
+            }
+        }
+
+        if (strokeyesorno == 1) {
+            currentColor = getAdjustmentLayerColorStroke(app.activeDocument, current);
+            if (searchColor == currentColor && searchColorstroke == currentStroke){
+                putFillColor(_r, _g, _b);
+                putFillColorStroke(_sr, _sg, _sb); 
+            } 
+        }
+    }
+
+    alert (layers.length);
+}
+
 
 //Apply Fill Color
 
@@ -159,4 +183,4 @@ function hexToRgb(hex) {
 }
 
 
-//getColors(app.activeDocument.layerSets);
+getColors(app.activeDocument.layerSets);
