@@ -1,6 +1,7 @@
 //@include "/Applications/Adobe Photoshop CC 2015/Presets/Scripts/xlib/stdlib.js"
 //original is exportshapecolors
 // © David Luna fuckin' boss.
+// © Roman Tauler 
 
 //COLOR VARS
 var searchColor = prompt("Color to search","777575");
@@ -26,20 +27,38 @@ function getAdjustmentLayerColorStroke(doc, layer){
     var ref = new ActionReference();  
     ref.putEnumerated( stringIDToTypeID("contentLayer"), charIDToTypeID("Ordn"), charIDToTypeID("Trgt") );  
     var layerDesc = executeActionGet(ref);  
-    var strokeSt = layerDesc.getObjectValue(stringIDToTypeID("AGMStrokeStyleInfo")); 
+    //var strokeSt = layerDesc.getObjectValue(stringIDToTypeID("AGMStrokeStyleInfo")); 
+    //MAGIC
+    //var agmDesc = strokeSt.getBoolean(stringIDToTypeID( "strokeEnabled" )); 
+    //alert(agmDesc);
+    //MAGIC!
+    var strokeSt, agmDesc, createdRGBColorStroke;
 
-    // var idstrokeEnabled = stringIDToTypeID( "strokeEnabled" );
-    var agmDesc = strokeSt.getBoolean(stringIDToTypeID( "strokeEnabled" )); 
-    alert(agmDesc);
+    try {
+        strokeSt = layerDesc.getObjectValue(stringIDToTypeID("AGMStrokeStyleInfo"));
+    } catch (e) {
+        strokeSt = null;
+    }
 
-    var strokeStyleColor = strokeSt.getObjectValue(stringIDToTypeID("strokeStyleContent")).getObjectValue(stringIDToTypeID("color"));  
-    var stroker = Math.round(strokeStyleColor.getDouble(stringIDToTypeID("red")));
-    var strokeg = Math.round(strokeStyleColor.getDouble(stringIDToTypeID("green")));
-    var strokeb = Math.round(strokeStyleColor.getDouble(stringIDToTypeID("blue")));
+    if ( strokeSt ) {
+        var strokeStyleColor = strokeSt.getObjectValue(stringIDToTypeID("strokeStyleContent")).getObjectValue(stringIDToTypeID("color"));  
+        var stroker = Math.round(strokeStyleColor.getDouble(stringIDToTypeID("red")));
+        var strokeg = Math.round(strokeStyleColor.getDouble(stringIDToTypeID("green")));
+        var strokeb = Math.round(strokeStyleColor.getDouble(stringIDToTypeID("blue")));
+        var createdSolidColorStroke = Stdlib.createRGBColor(stroker, strokeg, strokeb);
 
-    var createdSolidColorStroke = Stdlib.createRGBColor(stroker, strokeg, strokeb);
-    var createdRGBColorStroke = createdSolidColorStroke.rgb;
-    return createdRGBColorStroke.hexValue;
+        createdRGBColorStroke = createdSolidColorStroke.rgb;
+        agmDesc = strokeSt.getBoolean(stringIDToTypeID( "strokeEnabled" ));
+    } else {
+        createdRGBColorStroke = null;
+        agmDesc = false;
+    }
+
+    
+    return {
+        hexValue: createdRGBColorStroke ? createdRGBColorStroke.hexValue : '',
+        agmDesc : agmDesc
+    };
 };
 //ENDSTROKE
 
@@ -101,7 +120,7 @@ function getColors(layerSet) {
 
         if (strokeyesorno == 1) {
             currentStroke = getAdjustmentLayerColorStroke(app.activeDocument, current);
-            if (searchColor == currentColor && searchColorstroke == currentStroke){
+            if (searchColor == currentColor && searchColorstroke == currentStroke.hexValue && currentStroke.agmDesc) {
                 putFillColor(_r, _g, _b);
                 putFillColorStroke(_sr, _sg, _sb);
             } 
